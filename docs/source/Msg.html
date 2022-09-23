@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='Miraeweb-utils-Msg'>/**
+</span> *  Ext.Msg 의 간소화 시킨 함수입니다.
+ */
+Ext.define('Miraeweb.utils.Msg',{
+    alternateClassName : ['Miraeweb.Msg'],
+    extend     : 'Ext.Base',
+    singleton  : true,
+
+<span id='Miraeweb-utils-Msg-method-alert'>    /**
+</span>     *
+     * alert창 띄우기
+     *
+     * @param{String} title  제목
+     * @param{String} message 메시지
+     * @param{Function} callbackFunc 콜백함수
+     */
+    alert: function (title, message, callbackFunc) {
+
+        if(Ext.isObject(title)){
+
+            var objMsg =title;
+            title = objMsg.title;
+            callbackFunc = message;
+            message = objMsg.message;
+
+        }
+
+        Ext.Msg.alert(title, message, function (btn) {
+            if(Ext.isFunction(callbackFunc)){
+                callbackFunc();
+            }
+        });
+    },
+
+<span id='Miraeweb-utils-Msg-method-confirm'>    /**
+</span>     *
+     *  Ext.Msg.confirm의 간소화 버전입니다.
+     *
+     * @param {String} title  제목
+     * @param {String} message 메시지
+     * @param {Function} callbackFunc [Yes] 버튼을 클릭시 실행되는 함수
+     * @param {Object} scope
+     */
+    confirm : function(title,message,callbackFunc,scope){
+        var msgbox = Ext.Msg.confirm(title,message,function(btn){
+            if(Ext.isFunction(callbackFunc)){
+
+                if(btn=='yes'){
+                    Ext.callback(callbackFunc,this);
+                }
+            }else{
+
+                if(btn=='yes'){
+
+                    Ext.callback(callbackFunc.yesFunc,this);
+
+                    callbackFunc.yesFunc();
+
+                }else{
+
+                    Ext.callback(callbackFunc.noFunc,this);
+                }
+            }
+
+        },scope);
+        Ext.WindowMgr.bringToFront(msgbox);
+    },
+
+<span id='Miraeweb-utils-Msg-method-toast'>    toast: function (msg, callbackFunc) {
+</span>
+        Ext.widget('toast',{
+            html : msg,
+        }).show();
+        Ext.defer(function(){
+            if(Ext.isFunction(callbackFunc)){
+                callbackFunc();
+            }
+        });
+    },
+
+
+
+});</pre>
+</body>
+</html>
